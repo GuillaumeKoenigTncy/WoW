@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WoW v0.0</title>
+        <script>
+		
+		input = "";
+		
+		function TelnetCOM(){
+			nocache = "&nocache=" + Math.random() * 1000000;
+			var request = new XMLHttpRequest();
+			request.onreadystatechange = function(){
+				if (this.readyState == 4) {
+					if (this.status == 200) {
+						if (this.responseXML != null) {
+							if(this.responseXML.getElementsByTagName('command')[0].childNodes[0].nodeValue != "..."){
+								var node = document.createElement("LI");
+								var textnode = document.createTextNode(this.responseXML.getElementsByTagName('command')[0].childNodes[0].nodeValue);
+								node.appendChild(textnode);
+								document.getElementById("myList").appendChild(node);
+							}
+						}
+					}
+				}
+			}
+			
+			request.open("GET", "ajax_inputs" + input + nocache, true);
+			request.send(null);
+			setTimeout('TelnetCOM()', 1000);
+			input = "";
+				
+		}
+			
+		function GetInput(){
+			input = document.getElementById("input").value;
+			input = input.trim();
+			if(input != ""){
+				myFunction();
+				input = "&".concat(input);
+				document.getElementById("input").value = "";
+			}
+		}
+			
+		function myFunction(){
+			if(input == "help"){
+				var node = document.createElement("LI");
+				var textnode = document.createTextNode("Available commands ...");
+				node.appendChild(textnode);
+				document.getElementById("myList").appendChild(node);
+				
+				node = document.createElement("LI");
+				textnode = document.createTextNode(" | start => start the server");
+				node.appendChild(textnode);
+				document.getElementById("myList").appendChild(node);
+				
+				node = document.createElement("LI");
+				textnode = document.createTextNode(" | check => check the server state");
+				node.appendChild(textnode);
+				document.getElementById("myList").appendChild(node);
+				
+				node = document.createElement("LI");
+				textnode = document.createTextNode(" | reboot => force the reboot");
+				node.appendChild(textnode);
+				document.getElementById("myList").appendChild(node);
+			}else{
+				var node = document.createElement("LI");
+				var textnode = document.createTextNode(input);
+				node.appendChild(textnode);
+				document.getElementById("myList").appendChild(node);
+			}
+		}
+		
+		function TestIO(ele) {
+			var node = document.createElement("LI");
+			var textnode = document.createTextNode(" | Server is starting !");
+			node.appendChild(textnode);
+			document.getElementById("myList").appendChild(node);
+		}
+		
+		function search(ele) {
+			if(event.keyCode == 13) {
+				GetInput();        
+			}
+		}
+
+		</script>
+
+		<style>
+		.container{
+			width:750px;
+			background-color:black;
+			color:#cecece;
+			padding: 10px 0 10px 0;
+			font-size: large;
+			font-family: "lucida console", sans-serif;
+			line-height: 150%;
+		}
+		
+		ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		li { 
+			padding-left: 16px; 
+		}
+
+		li:before {
+			content: ">";
+			padding-right: 8px;
+			color: #cecece;
+		}
+		
+		#input{
+			margin: 0 0 5px 0;
+			font-size: large;
+			font-family: "lucida console", sans-serif;
+		}
+		
+		#button{
+			font-size: large;
+			font-family: "lucida console", sans-serif;
+		}
+		</style>
+    </head>
+    <body onload="TelnetCOM()">
+	<h1>WoW Arduino</h1>
+	<div class="container">
+		<ul id="myList">
+			<li>Send "help" ?</li>
+		</ul>
+		<br />
+		<ul>
+			<li><input id="input" placeholder="Prompt ..." type="text" onkeydown="search(this)" required><button id="button" onclick="GetInput()">Send</button></li>
+		</ul>
+	</div>
+	
+	<br/ >
+	
+	<button id="button" onclick="TestIO()">test</button>
+	
+    </body>
+</html>
+
+
+
+
+
